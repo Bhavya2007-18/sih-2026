@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { api } from "@/lib/api";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface MapRouteData {
   id: string;
@@ -40,6 +42,8 @@ export interface ScenarioMapPayload {
   events: MapEventData[];
 }
 
+// ─── Fallback data ─────────────────────────────────────────────────────────────
+
 const FALLBACK_MAP_DATA: ScenarioMapPayload = {
   scenario_id: "demo-ladakh-001",
   scope: "synthetic scenario / cached",
@@ -57,7 +61,11 @@ const FALLBACK_MAP_DATA: ScenarioMapPayload = {
       geometry: {
         type: "LineString",
         coordinates: [
-          [77.5771, 34.1526], [77.72, 33.95], [77.95, 34.25], [78.18, 34.02], [78.1345, 35.1378],
+          [77.5771, 34.1526],
+          [77.72, 33.95],
+          [77.95, 34.25],
+          [78.18, 34.02],
+          [78.1345, 35.1378],
         ],
       },
       eta: { hours: 6.8, formatted: "6.8 h" },
@@ -70,7 +78,10 @@ const FALLBACK_MAP_DATA: ScenarioMapPayload = {
       geometry: {
         type: "LineString",
         coordinates: [
-          [77.5771, 34.1526], [77.85, 34.75], [78.0, 34.9], [78.1345, 35.1378],
+          [77.5771, 34.1526],
+          [77.85, 34.75],
+          [78.0, 34.9],
+          [78.1345, 35.1378],
         ],
       },
       eta: { hours: 7.4, formatted: "7.4 h" },
@@ -83,7 +94,10 @@ const FALLBACK_MAP_DATA: ScenarioMapPayload = {
       geometry: {
         type: "LineString",
         coordinates: [
-          [77.5771, 34.1526], [77.68, 34.45], [77.92, 34.8], [78.1345, 35.1378],
+          [77.5771, 34.1526],
+          [77.68, 34.45],
+          [77.92, 34.8],
+          [78.1345, 35.1378],
         ],
       },
       eta: { hours: 5.9, formatted: "5.9 h" },
@@ -110,12 +124,34 @@ const ROUTE_COLORS: Record<string, string> = {
   "route-c": "#ffba61",
 };
 
-const RISK_COLORS: Record<string, string> = {
-  LOW: "#4be277",
-  MEDIUM: "#ffba61",
-  HIGH: "#ff7183",
-  CRITICAL: "#ff7183",
-};
+// ─── Node/Event pin colours ────────────────────────────────────────────────────
+
+function nodeColor(status: string): { bg: string; border: string } {
+  if (status === "OPERATIONAL") return { bg: "#134e2c", border: "#4be277" };
+  if (status === "DEGRADED") return { bg: "#785600", border: "#ffba61" };
+  return { bg: "#6e1d24", border: "#ff7183" };
+}
+
+function badgeColors(badge: string): { bg: string; color: string } {
+  if (badge === "CRITICAL" || badge === "HIGH") return { bg: "#ffebee", color: "#c62828" };
+  if (badge === "OPERATIONAL" || badge === "LOW") return { bg: "#e8f5e9", color: "#2e7d32" };
+  return { bg: "#fff8e1", color: "#f57f17" };
+}
+
+// ─── SVG marker factory (returns a data-URI for use as Leaflet DivIcon) ────────
+
+function makeSvgIcon(fill: string, stroke: string, scale = 1): string {
+  const w = Math.round(24 * scale);
+  const h = Math.round(32 * scale);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 24 32">
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 20 12 20S24 21 24 12C24 5.373 18.627 0 12 0z"
+      fill="${fill}" stroke="${stroke}" stroke-width="2"/>
+    <circle cx="12" cy="12" r="4" fill="#ffffff"/>
+  </svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+// ─── Props ────────────────────────────────────────────────────────────────────
 
 interface MayaMapProps {
   scenarioId?: string;
@@ -124,31 +160,43 @@ interface MayaMapProps {
   isOnline?: boolean;
 }
 
+// ─── Main component ───────────────────────────────────────────────────────────
+// Leaflet is browser-only; we guard against SSR by mounting only on the client.
+
 export default function MayaMap({
   scenarioId = "demo-ladakh-001",
   selectedRouteId,
   onSelectRoute,
   isOnline = true,
 }: MayaMapProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapRef = useRef<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const layersRef = useRef<{ routes: any[]; markers: any[] }>({ routes: [], markers: [] });
-
+  const [mounted, setMounted] = useState(false);
   const [mapData, setMapData] = useState<ScenarioMapPayload>(FALLBACK_MAP_DATA);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  const [layersVisibility, setLayersVisibility] = useState({
-    routes: true,
-    nodes: true,
-    events: true,
-  });
+  const [layersVisibility, setLayersVisibility] = useState({ routes: true, nodes: true, events: true });
+  const [activeInfo, setActiveInfo] = useState<{
+    lat: number;
+    lng: number;
+    title: string;
+    subtitle?: string;
+    badge?: string;
+    details?: string;
+  } | null>(null);
 
-  // Fetch scenario map data
+  // Refs for programmatic map control (set after MapContainer mounts)
+  const mapRef = useRef<import("leaflet").Map | null>(null);
+
+  // Mount guard — ensures Leaflet only runs in the browser
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Fetch scenario data
   useEffect(() => {
     let ignore = false;
     async function load() {
-      if (!isOnline) { setMapData(FALLBACK_MAP_DATA); return; }
+      if (!isOnline) {
+        setMapData(FALLBACK_MAP_DATA);
+        return;
+      }
       try {
         const fetched = await api<ScenarioMapPayload>(
           `/scenarios/${encodeURIComponent(scenarioId)}/map`
@@ -162,277 +210,473 @@ export default function MayaMap({
     return () => { ignore = true; };
   }, [scenarioId, isOnline]);
 
-  // Initialize Leaflet map ONCE
-  useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
-    let cancelled = false;
+  // Formatted routes — coordinates flipped from GeoJSON [lng,lat] to Leaflet [lat,lng]
+  const formattedRoutes = useMemo(() => {
+    return mapData.routes.map(r => ({
+      ...r,
+      positions: r.geometry.coordinates.map(([lng, lat]) => [lat, lng] as [number, number]),
+      color: ROUTE_COLORS[r.id] || "#70d7ff",
+      isSelected: r.id === selectedRouteId,
+    }));
+  }, [mapData.routes, selectedRouteId]);
 
-    async function init() {
-      const L = (await import("leaflet")).default;
-      await import("leaflet/dist/leaflet.css");
+  // Fit map to all points
+  const handleFit = useCallback(() => {
+    const m = mapRef.current;
+    if (!m) return;
+    // dynamic import to avoid SSR issues with leaflet
+    import("leaflet").then(L => {
+      const bounds = L.latLngBounds([]);
+      bounds.extend([mapData.origin.lat, mapData.origin.lng]);
+      bounds.extend([mapData.destination.lat, mapData.destination.lng]);
+      mapData.nodes.forEach(n => bounds.extend([n.lat, n.lng]));
+      mapData.events.forEach(e => bounds.extend([e.lat, e.lng]));
+      mapData.routes.forEach(r =>
+        r.geometry.coordinates.forEach(([lng, lat]) => bounds.extend([lat, lng]))
+      );
+      m.fitBounds(bounds, { padding: [50, 50] });
+    });
+  }, [mapData]);
 
-      if (cancelled || !containerRef.current || mapRef.current) return;
-
-      // Handle re-mounts / React strict mode container reuse
-      if ((containerRef.current as any)._leaflet_id) {
-        (containerRef.current as any)._leaflet_id = null;
-      }
-
-      const map = L.map(containerRef.current, {
-        center: [34.65, 77.85],
-        zoom: 8,
-        zoomControl: false,
-        attributionControl: true,
-      });
-
-      // Clean dark GIS map layer (Esri World Dark Gray Base - 100% clean, keyless, watermark-free, no flag placeholders)
-      const customTileUrl = process.env.NEXT_PUBLIC_MAP_TILE_URL;
-
-      let tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}";
-      let attribution = '&copy; <a href="https://www.esri.com/">Esri</a>, USGS, NOAA, OpenStreetMap';
-      let subdomains: string | string[] = "abc";
-
-      if (customTileUrl) {
-        tileUrl = customTileUrl;
-        attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-      }
-
-      L.tileLayer(tileUrl, {
-        attribution,
-        subdomains,
-        maxZoom: 16,
-      }).addTo(map);
-
-      L.control.zoom({ position: "topright" }).addTo(map);
-
-      if (cancelled) {
-        map.remove();
-        return;
-      }
-
-      mapRef.current = map;
-      setMapLoaded(true);
-    }
-    init();
-
-    return () => {
-      cancelled = true;
-      if (mapRef.current) {
-        mapRef.current.remove();
-        mapRef.current = null;
-      }
-    };
+  const handleReset = useCallback(() => {
+    mapRef.current?.setView([34.65, 77.85], 8);
   }, []);
 
-  // Redraw overlays when data / selection / visibility changes
-  useEffect(() => {
-    if (!mapLoaded || !mapRef.current) return;
+  if (!mounted) {
+    // SSR / pre-hydration placeholder — same dimensions as the map
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "620px",
+          background: "#080e17",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#4be277",
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: "11px",
+          letterSpacing: ".08em",
+        }}
+      >
+        INITIALISING MAP…
+      </div>
+    );
+  }
 
-    async function drawOverlays() {
-      const L = (await import("leaflet")).default;
-      const map = mapRef.current;
+  // Lazy-load react-leaflet components only on the client
+  return <LeafletMap
+    mapData={mapData}
+    formattedRoutes={formattedRoutes}
+    layersVisibility={layersVisibility}
+    setLayersVisibility={setLayersVisibility}
+    activeInfo={activeInfo}
+    setActiveInfo={setActiveInfo}
+    mapRef={mapRef}
+    isOnline={isOnline}
+    onSelectRoute={onSelectRoute}
+    handleFit={handleFit}
+    handleReset={handleReset}
+  />;
+}
 
-      // Remove previous overlays
-      layersRef.current.routes.forEach(l => l.remove());
-      layersRef.current.markers.forEach(m => m.remove());
-      layersRef.current = { routes: [], markers: [] };
+// ─── Inner component (client-only, loaded after mount guard) ──────────────────
 
-      const { routes, nodes, events, origin, destination } = mapData;
+import "leaflet/dist/leaflet.css";
+import {
+  MapContainer,
+  TileLayer,
+  Polyline,
+  Marker,
+  Popup,
+  useMap,
+} from "react-leaflet";
+import L from "leaflet";
 
-      // ── ROUTE POLYLINES ──────────────────────────────────────────────
-      if (layersVisibility.routes) {
-        routes.forEach(route => {
-          const color = ROUTE_COLORS[route.id] ?? "#70d7ff";
-          const isSelected = selectedRouteId === route.id;
-          const dimmed = selectedRouteId && !isSelected;
+// Leaflet's default icon asset path is broken in bundlers — fix it once
+if (typeof window !== "undefined") {
+  // @ts-expect-error _getIconUrl is an internal Leaflet method
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  });
+}
 
-          // Shadow / glow for selected
-          if (isSelected) {
-            const glow = L.polyline(
-              route.geometry.coordinates.map(([lng, lat]) => [lat, lng] as [number, number]),
-              { color: "#ffffff", weight: 10, opacity: 0.12, interactive: false }
-            ).addTo(map);
-            layersRef.current.routes.push(glow);
-          }
+// Small hook-based component that syncs the Leaflet map instance into a ref
+function MapRefSync({ mapRef }: { mapRef: React.MutableRefObject<L.Map | null> }) {
+  const map = useMap();
+  useEffect(() => { mapRef.current = map; }, [map, mapRef]);
+  return null;
+}
 
-          const polyline = L.polyline(
-            route.geometry.coordinates.map(([lng, lat]) => [lat, lng] as [number, number]),
-            {
-              color,
-              weight: isSelected ? 5 : 3,
-              opacity: dimmed ? 0.25 : 0.9,
-              dashArray: route.id === "route-c" ? "8 6" : undefined,
-            }
-          );
+interface LeafletMapProps {
+  mapData: ScenarioMapPayload;
+  formattedRoutes: ReturnType<typeof Array.prototype.map>;
+  layersVisibility: { routes: boolean; nodes: boolean; events: boolean };
+  setLayersVisibility: React.Dispatch<React.SetStateAction<{ routes: boolean; nodes: boolean; events: boolean }>>;
+  activeInfo: { lat: number; lng: number; title: string; subtitle?: string; badge?: string; details?: string } | null;
+  setActiveInfo: React.Dispatch<React.SetStateAction<LeafletMapProps["activeInfo"]>>;
+  mapRef: React.MutableRefObject<L.Map | null>;
+  isOnline: boolean;
+  onSelectRoute?: (routeId: string) => void;
+  handleFit: () => void;
+  handleReset: () => void;
+}
 
-          polyline.on("click", () => onSelectRoute?.(route.id));
-          polyline.on("mouseover", function (e) {
-            const popup = L.popup({ closeButton: false, offset: [0, -4] })
-              .setLatLng(e.latlng)
-              .setContent(`
-                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 8px;background:#101722;color:#dfe7f1;border:1px solid ${color};min-width:160px;">
-                  <strong style="color:${color};display:block;margin-bottom:3px;">${route.name}</strong>
-                  <div>ETA: <b style="color:#4be277;">${route.eta.formatted}</b></div>
-                  <div>RESILIENCE: <b style="color:#ffba61;">${Math.round(route.resilience * 100)}%</b></div>
-                  <div>RISK: <b style="color:${RISK_COLORS[route.risk_level] ?? '#dfe7f1'};">${route.risk_level}</b></div>
-                  <div style="margin-top:4px;color:#8796a8;font-size:9px;">Click to select route</div>
-                </div>
-              `)
-              .openOn(map);
-            layersRef.current.routes.push(popup);
-          });
-
-          polyline.addTo(map);
-          layersRef.current.routes.push(polyline);
-        });
-      }
-
-      // ── MARKERS ──────────────────────────────────────────────────────
-      function makeIcon(color: string, size = 14) {
-        return L.divIcon({
-          html: `<div style="width:${size}px;height:${size}px;background:${color};border:2px solid #090e17;border-radius:50%;box-shadow:0 0 8px ${color};"></div>`,
-          className: "",
-          iconSize: [size, size],
-          iconAnchor: [size / 2, size / 2],
-        });
-      }
-
-      function makeLabelIcon(color: string, label: string) {
-        return L.divIcon({
-          html: `
-            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-              <div style="width:14px;height:14px;background:${color};border:2px solid #090e17;border-radius:50%;box-shadow:0 0 10px ${color};"></div>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:${color};background:rgba(9,14,23,0.92);padding:1px 4px;border:1px solid ${color};white-space:nowrap;">${label}</span>
-            </div>`,
-          className: "",
-          iconSize: [90, 34],
-          iconAnchor: [45, 8],
-        });
-      }
-
-      if (layersVisibility.nodes) {
-        // Origin
-        const origMarker = L.marker([origin.lat, origin.lng], {
-          icon: makeLabelIcon("#70d7ff", "ORIGIN: LEH"),
-        }).addTo(map);
-        layersRef.current.markers.push(origMarker);
-
-        // Destination
-        const destMarker = L.marker([destination.lat, destination.lng], {
-          icon: makeLabelIcon("#4be277", "DEST: KARAKORAM"),
-        }).addTo(map);
-        layersRef.current.markers.push(destMarker);
-
-        // Logistics nodes
-        nodes.forEach(node => {
-          const col = node.status === "DEGRADED" ? "#ffba61" : "#8796a8";
-          const m = L.marker([node.lat, node.lng], { icon: makeIcon(col, 9) })
-            .bindTooltip(`<span style="font-family:'JetBrains Mono',monospace;font-size:10px;">${node.name} [${node.status}]</span>`, { className: "maya-tooltip" })
-            .addTo(map);
-          layersRef.current.markers.push(m);
-        });
-      }
-
-      // Disruption events
-      if (layersVisibility.events) {
-        events.forEach(evt => {
-          const evtIcon = L.divIcon({
-            html: `
-              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-                <div style="width:13px;height:13px;background:#ff7183;border:2px solid #090e17;transform:rotate(45deg);box-shadow:0 0 8px #ff7183;"></div>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;color:#ff7183;background:rgba(30,10,15,0.95);padding:1px 4px;border:1px solid #ff7183;white-space:nowrap;">⚠ ${evt.name}</span>
-              </div>`,
-            className: "",
-            iconSize: [120, 32],
-            iconAnchor: [60, 8],
-          });
-          const m = L.marker([evt.lat, evt.lng], { icon: evtIcon })
-            .bindTooltip(evt.details ?? evt.name, { className: "maya-tooltip" })
-            .addTo(map);
-          layersRef.current.markers.push(m);
-        });
-      }
-
-      // Fit bounds to scenario
-      try {
-        const allLatLngs = [
-          [origin.lat, origin.lng] as [number, number],
-          [destination.lat, destination.lng] as [number, number],
-          ...nodes.map(n => [n.lat, n.lng] as [number, number]),
-          ...routes.flatMap(r =>
-            r.geometry.coordinates.map(([lng, lat]) => [lat, lng] as [number, number])
-          ),
-        ];
-        map.fitBounds(L.latLngBounds(allLatLngs), { padding: [30, 30], maxZoom: 10 });
-      } catch { /* ignore */ }
-    }
-
-    drawOverlays();
-  }, [mapData, mapLoaded, selectedRouteId, layersVisibility, onSelectRoute]);
-
-  const fitScenario = async () => {
-    if (!mapRef.current) return;
-    const L = (await import("leaflet")).default;
-    const { routes, nodes, origin, destination } = mapData;
-    const all = [
-      [origin.lat, origin.lng] as [number, number],
-      [destination.lat, destination.lng] as [number, number],
-      ...nodes.map(n => [n.lat, n.lng] as [number, number]),
-      ...routes.flatMap(r => r.geometry.coordinates.map(([lng, lat]) => [lat, lng] as [number, number])),
-    ];
-    mapRef.current.fitBounds(L.latLngBounds(all), { padding: [30, 30], maxZoom: 10 });
-  };
-
-  const resetView = () => {
-    mapRef.current?.setView([34.65, 77.85], 8);
-  };
-
+function LeafletMap({
+  mapData,
+  formattedRoutes,
+  layersVisibility,
+  setLayersVisibility,
+  activeInfo,
+  setActiveInfo,
+  mapRef,
+  isOnline,
+  onSelectRoute,
+  handleFit,
+  handleReset,
+}: LeafletMapProps) {
   return (
-    <div className="maya-map-wrapper" style={{ position: "relative", width: "100%" }}>
-      {/* Leaflet CSS workaround for icon paths */}
-      <style>{`
-        .leaflet-container { background: #080e17 !important; font-family: 'JetBrains Mono', monospace; }
-        .leaflet-tile-pane { filter: brightness(0.85) saturate(1.1); }
-        .leaflet-control-attribution { background: rgba(9,14,23,0.85) !important; color: #637488 !important; font-family: 'JetBrains Mono', monospace; font-size: 8px; }
-        .leaflet-control-attribution a { color: #70d7ff !important; }
-        .leaflet-bar a { background: #181d28 !important; color: #70d7ff !important; border-color: #293544 !important; }
-        .leaflet-bar a:hover { background: #202735 !important; }
-        .maya-tooltip { background: #101722 !important; border: 1px solid #293544 !important; color: #dfe7f1 !important; font-family: 'JetBrains Mono', monospace; font-size: 10px; border-radius: 0; padding: 4px 8px; }
-        .maya-tooltip::before { display: none; }
-        .leaflet-popup-content-wrapper { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0; border-radius: 0; }
-        .leaflet-popup-tip { display: none; }
-        .leaflet-popup-content { margin: 0; }
-      `}</style>
+    <div style={{ position: "relative", width: "100%", background: "#080e17", fontFamily: "'JetBrains Mono', monospace" }}>
 
-      {/* Toolbar */}
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"8px 12px", background:"#101722", borderBottom:"1px solid #293544", fontFamily:"'JetBrains Mono',monospace", fontSize:"10px" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-          <span style={{ color:"#70d7ff", fontWeight:700 }}>SYNTHETIC SCENARIO</span>
-          <span style={{ color:"#8796a8" }}>|</span>
-          <span style={{ color:"#4be277" }}>REAL BASEMAP · WORLD MAP</span>
-          <span style={{ padding:"2px 6px", background: isOnline ? "#102319" : "#2a141c", color: isOnline ? "#4be277" : "#ff7183", border:`1px solid ${isOnline ? "#265e3b" : "#703140"}`, fontWeight:600 }}>
-            {isOnline ? "LIVE" : "OFFLINE — CACHED"}
+      {/* ── Header Toolbar ──────────────────────────────────────────────── */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "8px",
+          padding: "8px 12px",
+          background: "#101722",
+          borderBottom: "1px solid #293544",
+          fontSize: "10px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <span style={{ color: "#70d7ff", fontWeight: 700 }}>OPENSTREETMAP PLATFORM</span>
+          <span style={{ color: "#4be277", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4be277", display: "inline-block" }} />
+            SDK: react-leaflet · OSM tiles
+          </span>
+          <span
+            style={{
+              padding: "2px 6px",
+              background: isOnline ? "#102319" : "#2a141c",
+              color: isOnline ? "#4be277" : "#ff7183",
+              border: `1px solid ${isOnline ? "#265e3b" : "#703140"}`,
+              fontWeight: 600,
+            }}
+          >
+            {isOnline ? "LIVE TELEMETRY" : "OFFLINE — CACHED"}
           </span>
         </div>
-        <div style={{ display:"flex", gap:"6px" }}>
-          <button onClick={fitScenario} style={{ background:"#202735", color:"#70d7ff", border:"1px solid #38556a", padding:"4px 8px", fontSize:"9px", fontWeight:600, cursor:"pointer" }}>FIT SCENARIO</button>
-          <button onClick={resetView} style={{ background:"#202735", color:"#dfe7f1", border:"1px solid #293544", padding:"4px 8px", fontSize:"9px", fontWeight:600, cursor:"pointer" }}>RESET VIEW</button>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <button
+            onClick={handleFit}
+            style={{
+              background: "#202735",
+              color: "#70d7ff",
+              border: "1px solid #38556a",
+              padding: "4px 8px",
+              fontSize: "9px",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            FIT SCENARIO
+          </button>
+          <button
+            onClick={handleReset}
+            style={{
+              background: "#202735",
+              color: "#dfe7f1",
+              border: "1px solid #293544",
+              padding: "4px 8px",
+              fontSize: "9px",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            RESET VIEW
+          </button>
         </div>
       </div>
 
-      {/* Layer toggles */}
-      <div style={{ display:"flex", gap:"12px", padding:"5px 12px", background:"#0a1019", borderBottom:"1px solid #293544", fontFamily:"'JetBrains Mono',monospace", fontSize:"9px", color:"#8796a8" }}>
-        <span>LAYERS:</span>
-        {(["routes","nodes","events"] as const).map(key => (
-          <label key={key} style={{ display:"inline-flex", alignItems:"center", gap:"4px", cursor:"pointer" }}>
-            <input type="checkbox" checked={layersVisibility[key]} onChange={e => setLayersVisibility(p => ({ ...p, [key]: e.target.checked }))} />
-            <span style={{ color: key==="routes" ? "#70d7ff" : key==="nodes" ? "#4be277" : "#ff7183" }}>{key.toUpperCase()}</span>
-          </label>
-        ))}
+      {/* ── Layers Bar ──────────────────────────────────────────────────── */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "5px 12px",
+          background: "#0a1019",
+          borderBottom: "1px solid #293544",
+          fontSize: "9px",
+          color: "#8796a8",
+        }}
+      >
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <span>LAYERS:</span>
+          {(["routes", "nodes", "events"] as const).map(key => (
+            <label
+              key={key}
+              style={{ display: "inline-flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
+            >
+              <input
+                type="checkbox"
+                checked={layersVisibility[key]}
+                onChange={e => setLayersVisibility(p => ({ ...p, [key]: e.target.checked }))}
+              />
+              <span
+                style={{
+                  color: key === "routes" ? "#70d7ff" : key === "nodes" ? "#4be277" : "#ff7183",
+                }}
+              >
+                {key.toUpperCase()}
+              </span>
+            </label>
+          ))}
+        </div>
+        <span style={{ color: "#627385" }}>
+          SCENARIO: <span style={{ color: "#dfe7f1" }}>{mapData.scenario_id}</span>
+        </span>
       </div>
 
-      {/* Map container */}
-      <div ref={containerRef} className="synthetic-map" style={{ width:"100%", height:"560px", background:"#080e17" }} />
+      {/* ── Map Canvas ──────────────────────────────────────────────────── */}
+      <MapContainer
+        center={[34.65, 77.85]}
+        zoom={8}
+        style={{ width: "100%", height: "560px" }}
+        // Dark-mode filter applied via className below
+        className="maya-leaflet-map"
+      >
+        <MapRefSync mapRef={mapRef} />
+
+        {/* OpenStreetMap dark-compatible tile layer (CartoDB Dark Matter — no key needed) */}
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
+          maxZoom={19}
+        />
+
+        {/* ── Routes ────────────────────────────────────────────────── */}
+        {layersVisibility.routes &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (formattedRoutes as any[]).map((r) => (
+            <Polyline
+              key={r.id}
+              positions={r.positions}
+              pathOptions={{
+                color: r.color,
+                opacity: r.isSelected ? 1.0 : 0.65,
+                weight: r.isSelected ? 6 : 3,
+              }}
+              eventHandlers={{
+                click: () => {
+                  onSelectRoute?.(r.id);
+                  const mid = r.positions[Math.floor(r.positions.length / 2)] as [number, number];
+                  setActiveInfo({
+                    lat: mid[0],
+                    lng: mid[1],
+                    title: r.name,
+                    subtitle: `ETA: ${r.eta.formatted} · RESILIENCE: ${(r.resilience * 100).toFixed(0)}%`,
+                    badge: r.risk_level,
+                    details: `Route ID: ${r.id.toUpperCase()}`,
+                  });
+                },
+              }}
+            />
+          ))}
+
+        {/* ── Nodes (origin, destination, staging) ──────────────────── */}
+        {layersVisibility.nodes && (
+          <>
+            {/* Origin */}
+            <Marker
+              position={[mapData.origin.lat, mapData.origin.lng]}
+              icon={L.icon({
+                iconUrl: makeSvgIcon("#0066cc", "#70d7ff", 1.15),
+                iconSize: [28, 37],
+                iconAnchor: [14, 37],
+                popupAnchor: [0, -37],
+              })}
+              eventHandlers={{
+                click: () =>
+                  setActiveInfo({
+                    lat: mapData.origin.lat,
+                    lng: mapData.origin.lng,
+                    title: `[ORIGIN] ${mapData.origin.name}`,
+                    subtitle: "Primary Logistics Base",
+                    badge: "ORIGIN",
+                    details: `Coordinates: ${mapData.origin.lat.toFixed(4)}, ${mapData.origin.lng.toFixed(4)}`,
+                  }),
+              }}
+            >
+              <Popup>{mapData.origin.name}</Popup>
+            </Marker>
+
+            {/* Destination */}
+            <Marker
+              position={[mapData.destination.lat, mapData.destination.lng]}
+              icon={L.icon({
+                iconUrl: makeSvgIcon("#0d7337", "#4be277", 1.25),
+                iconSize: [30, 40],
+                iconAnchor: [15, 40],
+                popupAnchor: [0, -40],
+              })}
+              eventHandlers={{
+                click: () =>
+                  setActiveInfo({
+                    lat: mapData.destination.lat,
+                    lng: mapData.destination.lng,
+                    title: `[DESTINATION] ${mapData.destination.name}`,
+                    subtitle: "Target Forward Position",
+                    badge: "DESTINATION",
+                    details: `Coordinates: ${mapData.destination.lat.toFixed(4)}, ${mapData.destination.lng.toFixed(4)}`,
+                  }),
+              }}
+            >
+              <Popup>{mapData.destination.name}</Popup>
+            </Marker>
+
+            {/* Staging Nodes */}
+            {mapData.nodes.map(node => {
+              const { bg, border } = nodeColor(node.status);
+              return (
+                <Marker
+                  key={node.id}
+                  position={[node.lat, node.lng]}
+                  icon={L.icon({
+                    iconUrl: makeSvgIcon(bg, border, 0.9),
+                    iconSize: [22, 29],
+                    iconAnchor: [11, 29],
+                    popupAnchor: [0, -29],
+                  })}
+                  eventHandlers={{
+                    click: () =>
+                      setActiveInfo({
+                        lat: node.lat,
+                        lng: node.lng,
+                        title: node.name,
+                        subtitle: `Status: ${node.status}`,
+                        badge: node.status,
+                        details: `ID: ${node.id} · Lat: ${node.lat.toFixed(4)} Lng: ${node.lng.toFixed(4)}`,
+                      }),
+                  }}
+                >
+                  <Popup>{node.name}</Popup>
+                </Marker>
+              );
+            })}
+          </>
+        )}
+
+        {/* ── Events / Disruptions ──────────────────────────────────── */}
+        {layersVisibility.events &&
+          mapData.events.map(event => (
+            <Marker
+              key={event.id}
+              position={[event.lat, event.lng]}
+              icon={L.icon({
+                iconUrl: makeSvgIcon("#8a1c27", "#ff7183", 1.0),
+                iconSize: [24, 32],
+                iconAnchor: [12, 32],
+                popupAnchor: [0, -32],
+              })}
+              eventHandlers={{
+                click: () =>
+                  setActiveInfo({
+                    lat: event.lat,
+                    lng: event.lng,
+                    title: `⚠️ ${event.name}`,
+                    subtitle: `Type: ${event.type} · Severity: ${event.severity}`,
+                    badge: event.severity,
+                    details: event.details || "No additional intel reported",
+                  }),
+              }}
+            >
+              <Popup>{event.name}</Popup>
+            </Marker>
+          ))}
+      </MapContainer>
+
+      {/* ── Info Panel (replaces Google InfoWindow) ─────────────────────── */}
+      {activeInfo && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "16px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1000,
+            background: "#101722",
+            border: "1px solid #38556a",
+            borderRadius: "4px",
+            padding: "12px 14px",
+            minWidth: "220px",
+            maxWidth: "340px",
+            boxShadow: "0 6px 24px rgba(0,0,0,0.7)",
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: "11px",
+            color: "#dfe7f1",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
+            <div style={{ fontWeight: 700, fontSize: "12px", marginBottom: "4px" }}>
+              {activeInfo.title}
+            </div>
+            <button
+              onClick={() => setActiveInfo(null)}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#8796a8",
+                cursor: "pointer",
+                fontSize: "14px",
+                lineHeight: 1,
+                padding: 0,
+                flexShrink: 0,
+              }}
+              aria-label="Close info panel"
+            >
+              ✕
+            </button>
+          </div>
+          {activeInfo.subtitle && (
+            <div style={{ color: "#8796a8", marginBottom: "6px", fontSize: "10px" }}>
+              {activeInfo.subtitle}
+            </div>
+          )}
+          {activeInfo.badge && (() => {
+            const { bg, color } = badgeColors(activeInfo.badge);
+            return (
+              <span
+                style={{
+                  display: "inline-block",
+                  padding: "2px 6px",
+                  borderRadius: "3px",
+                  background: bg,
+                  color,
+                  fontWeight: 600,
+                  fontSize: "10px",
+                  marginBottom: "4px",
+                }}
+              >
+                {activeInfo.badge}
+              </span>
+            );
+          })()}
+          {activeInfo.details && (
+            <div style={{ color: "#627385", fontSize: "10px", marginTop: "4px" }}>
+              {activeInfo.details}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
