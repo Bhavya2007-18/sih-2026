@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#dfe2ef","secondary-fixed":"#c4e7ff","error":"#ffb4ab","primary-fixed":"#6bff8f","tertiary-fixed-dim":"#ffb95f","tertiary-container":"#ef9900","background":"#0f131c","surface-container-high":"#262a34","on-primary":"#003915","secondary":"#7bd0ff","surface-tint":"#4ae176","primary-fixed-dim":"#4ae176","on-primary-container":"#004b1e","inverse-surface":"#dfe2ef","on-tertiary-fixed":"#2a1700","on-tertiary-container":"#5c3800","surface-variant":"#31353f","tertiary-fixed":"#ffddb8","on-tertiary":"#472a00","secondary-container":"#00a6e0","on-primary-fixed-variant":"#005321","on-error":"#690005","outline":"#869585","primary-container":"#22c55e","on-surface-variant":"#bccbb9","surface-container-highest":"#31353f","outline-variant":"#3d4a3d","on-tertiary-fixed-variant":"#653e00","on-surface":"#dfe2ef","surface-dim":"#0f131c","surface":"#0f131c","on-secondary-fixed-variant":"#004c69","inverse-primary":"#006e2f","on-error-container":"#ffdad6","on-primary-fixed":"#002109","error-container":"#93000a","on-secondary-fixed":"#001e2c","on-secondary-container":"#00374d","surface-container-low":"#181b25","secondary-fixed-dim":"#7bd0ff","inverse-on-surface":"#2c303a","surface-bright":"#353943","surface-container":"#1c1f29","on-secondary":"#00354a","tertiary":"#ffba61","primary":"#4be277","surface-container-lowest":"#0a0e17"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-md":"0.5rem","margin-mobile":"0.5rem","space-xl":"1rem","margin":"0.75rem","gutter":"0.5rem","gutter-mobile":"0.25rem","space-sm":"0.25rem","space-lg":"0.75rem","space-xs":"0.125rem"},fontFamily:{"headline-lg":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"label-md":["JetBrains Mono"],"label-lg":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"body-md":["Inter"],"headline-xl":["Inter"],"headline-xl-mobile":["Inter"],"body-lg":["Inter"],"data-mono-md":["JetBrains Mono"],"headline-lg-mobile":["Inter"],"data-mono-lg":["JetBrains Mono"]},fontSize:{"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-md":["18px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"400"}],"label-md":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"500"}],"label-lg":["13px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"label-sm":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"500"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"headline-xl":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-xl-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"700"}],"body-lg":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"data-mono-md":["14px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"600"}],"headline-lg-mobile":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"data-mono-lg":["20px",{"lineHeight":"24px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-lowest z-50 flex flex-col justify-between border-r border-outline-variant/30 select-none"><div class="flex flex-col min-h-0"><div class="p-space-lg border-b border-outline-variant/20 flex items-center gap-space-md"><img alt="Project Maya Emblem" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U2OChzhrFSo9CsV6jaw8Bz0OpV-NjAj9Kg-95RiTDC13Kk5QtyDB48CwF2J0K_d-LtcfVRA_AwCbQZaBbKXPhGkqlSkPBLOLvlB8uj2Dfj0wYLfp62ID8tgk-NZKPFHooVv9mSCWfG07qD4AdAYUkhSPN5bY555wjM9mDqR7P5Gqx1QvSQSU-Owd9U3NYSMANbPLY2GZZLI9QjSN-MVG7SULri_xYMnTsJsABKRuShzEez5Um2asywBKU"/><div class="flex flex-col min-w-0"><span class="font-headline-md text-headline-md tracking-wider text-on-surface uppercase truncate">PROJECT MAYA</span><span class="font-label-sm text-label-sm text-outline tracking-widest uppercase truncate">CONTESTED REPLENISHMENT SIMULATOR</span></div></div><div class="px-space-md py-space-sm border-b border-outline-variant/10 flex items-center justify-between bg-surface-container-low"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">SIMULATION TELEMETRY</span><span class="font-label-sm text-label-sm px-space-xs py-0 text-primary border border-primary/20 bg-primary/5">V3.8-REL</span></div><nav class="flex-1 overflow-y-auto px-space-sm py-space-sm space-y-space-xs" data-active-classes="bg-surface-container text-primary font-bold border-l-2 border-primary"><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="overview" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span>Overview</a><a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm transition-colors uppercase tracking-wider bg-surface-container text-primary font-bold border-l-2 border-primary" data-path="scenario-builder" href="#"><span class="material-symbols-outlined text-[18px]">deployed_code</span>Scenario Builder</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="simulation-engine" href="#"><span class="material-symbols-outlined text-[18px]">memory</span>Simulation Engine</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="decision-results" href="#"><span class="material-symbols-outlined text-[18px]">insights</span>Decision & Results</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="route-analysis" href="#"><span class="material-symbols-outlined text-[18px]">alt_route</span>Route Analysis</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="supply-forecast" href="#"><span class="material-symbols-outlined text-[18px]">query_stats</span>Supply Forecast</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="readiness-model" href="#"><span class="material-symbols-outlined text-[18px]">shield</span>Readiness Model</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="data-resilience" href="#"><span class="material-symbols-outlined text-[18px]">hub</span>Data Resilience</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="scenario-matrix" href="#"><span class="material-symbols-outlined text-[18px]">table_chart</span>Scenario Matrix</a><a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-md text-label-md uppercase tracking-wider" data-path="ghost-convoy" href="#"><span class="material-symbols-outlined text-[18px] text-tertiary">airware</span>Ghost Convoy</a></nav></div><div class="border-t border-outline-variant/30 bg-surface-container-low p-space-md space-y-space-sm"><div class="p-space-sm bg-surface-container-lowest border border-outline-variant/20 space-y-space-xs"><div class="flex items-center justify-between text-on-surface-variant"><span class="font-label-sm text-label-sm text-outline uppercase">SYS-LINK:</span><span class="font-label-sm text-label-sm text-primary flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>ONLINE | LNK-16</span></div><div class="flex items-center justify-between text-on-surface-variant"><span class="font-label-sm text-label-sm text-outline uppercase">DATA-SEED:</span><span class="font-data-mono-md text-body-sm text-secondary truncate max-w-[120px]">#48192-SYN</span></div></div><div class="flex items-center justify-between pt-space-xs"><a class="flex items-center gap-space-xs text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">tune</span>SETTINGS</a><span class="font-label-sm text-label-sm text-outline">SEC-LVL 4</span></div><div class="pt-space-xs border-t border-outline-variant/10 flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ9_1FHumYIX3jCzM31-Hti-QvI4QCanSu27XQaZf_nxnY01T3puuY5TDeCYr4yYaX4DYAEGbRF_m_UyvSSGlv2IrxEc1quGMgu_nFsF-QqbnCh4pnw1Y_dGK0uGmS6PVMyrR3vHPvx8M2BN2FKpWXrE4j9XWz7hS3ZqpYCVGY8DpJOxYqu288ijsO1s4WnWjo0lQecJfDw0JnvZniYm9hG3Yuzw0v--wLyYbk2JeK0MSy0QTNWkgf"/><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface font-semibold">CDR. S. J. JENKINS</span><span class="font-label-sm text-label-sm text-outline-variant uppercase">TASKFORCE LOG-CMD</span></div></div><span class="material-symbols-outlined text-outline-variant text-[18px]">lock</span></div></div></aside><div class="pl-72 flex flex-col min-h-screen"><header class="fixed top-0 left-72 right-0 h-14 bg-surface-container-lowest border-b border-outline-variant/30 z-40 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md overflow-hidden"><div class="flex items-center gap-space-xs px-space-md py-1 border border-outline-variant/30 bg-surface-container font-label-sm text-label-sm text-on-surface"><span class="text-outline font-semibold">SCENARIO:</span><span class="text-secondary font-semibold truncate">MOUNTAIN APEX REPLENISHMENT [MAYA-042]</span></div><div class="hidden xl:flex items-center gap-1.5 px-space-sm py-1 border border-primary/20 bg-primary/5 font-label-sm text-label-sm text-primary"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span><span>SIMULATION MODE (SYNTHETIC)</span></div><div class="hidden 2xl:flex items-center gap-1.5 px-space-sm py-1 border border-secondary/20 bg-secondary/5 font-label-sm text-label-sm text-secondary"><span class="material-symbols-outlined text-[14px]">satellite_alt</span><span>NODE MESH: CONNECTED (92% SYNC)</span></div><div class="hidden md:flex items-center gap-1 font-label-sm text-label-sm text-outline"><span class="text-outline-variant">SYNC:</span><span class="font-data-mono-md text-on-surface">T-00:04:12</span></div></div><div class="flex items-center gap-space-md"><button class="px-space-md py-1.5 border border-error/30 bg-error/10 hover:bg-error/20 text-error hover:text-on-error-container transition-colors font-label-sm text-label-sm uppercase flex items-center gap-space-xs" type="button"><span class="material-symbols-outlined text-[16px]">wifi_off</span><span class="hidden lg:inline">SIMULATE CONNECTIVITY LOSS</span></button><button class="p-1.5 text-on-surface-variant hover:text-on-surface transition-colors relative border border-outline-variant/30 bg-surface-container-low" type="button"><span class="material-symbols-outlined text-[18px]">notifications</span><span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-tertiary"></span></button><button class="px-space-lg py-1.5 bg-primary-container hover:bg-primary text-on-primary-container hover:text-on-primary transition-all font-label-md text-label-md font-bold uppercase tracking-wider flex items-center gap-space-xs" type="button"><span class="material-symbols-outlined text-[18px]">play_arrow</span><span>RUN SIMULATION</span></button></div></header><main class="relative pt-14 bg-background flex-1 w-full px-gutter"><div class="flex flex-col w-full pb-space-xl">
+<!-- Top Workspace Sub-Header & Controls -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md py-space-md mb-space-md bg-surface-container-lowest px-space-md shadow-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-xs py-0.5 bg-primary/10 text-primary font-label-sm text-label-sm uppercase tracking-widest">MODULE: SCENARIO-CONFIG</span>
+<span class="text-outline-variant font-label-sm text-label-sm">|</span>
+<span class="text-secondary font-label-sm text-label-sm">STOCHASTIC MONTE-CARLO READY</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-0.5">Scenario Builder & What-If Sandbox</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Construct synthetic supply environments, simulate stochastic disruptions, and evaluate downstream consequences.</p>
+</div>
+<!-- Action Execution Group -->
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="px-space-md py-2 bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md uppercase tracking-wider flex items-center gap-space-xs transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] text-outline">tune</span>
+<span>LOAD PRESET</span>
+</button>
+<button class="px-space-md py-2 bg-surface-container-high hover:bg-surface-variant text-secondary font-label-md text-label-md uppercase tracking-wider flex items-center gap-space-xs transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">play_circle</span>
+<span>RUN BASELINE</span>
+</button>
+<button class="px-space-lg py-2 bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md font-bold uppercase tracking-wider flex items-center gap-space-xs transition-all shadow-md" id="btn-run-sim" type="button">
+<span class="material-symbols-outlined text-[18px]">alt_route</span>
+<span>RE-SIMULATE WHAT-IF (1,000 RUNS)</span>
+</button>
+</div>
+</div>
+<!-- Three-Column Engineering Workspace Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md">
+<!-- LEFT COLUMN: Parameter Definition Panels (3.5 cols on XL) -->
+<div class="xl:col-span-4 flex flex-col gap-space-md">
+<!-- Module A: Scenario Specification -->
+<div class="bg-surface-container-low shadow-sm flex flex-col">
+<div class="flex items-center justify-between px-space-md py-2 bg-surface-container-lowest">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary font-semibold">SEC.A</span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">Scenario Specification</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">ID: MAYA-042</span>
+</div>
+<div class="p-space-md flex flex-col gap-space-md">
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block mb-1">Scenario Designation</label>
+<div class="p-2 bg-surface-container-lowest text-on-surface font-label-md text-label-md">
+              MAYA-042: High Altitude Mountain Replenishment
+            </div>
+</div>
+<!-- Temporal Horizon Slider -->
+<div>
+<div class="flex justify-between items-center mb-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Mission Simulation Horizon</label>
+<span class="font-data-mono-md text-body-sm text-primary" id="horizon-val">144 HOURS</span>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest appearance-none cursor-pointer accent-primary" id="horizon-range" max="360" min="72" step="12" type="range" value="144"/>
+<div class="flex justify-between font-label-sm text-label-sm text-outline mt-1">
+<span>72h (Immediate)</span>
+<span>180h</span>
+<span>360h (Extended)</span>
+</div>
+</div>
+<!-- Origin & Destination Pair -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<div class="p-space-sm bg-surface-container-lowest">
+<span class="font-label-sm text-label-sm text-outline block uppercase">Vector Origin</span>
+<span class="font-label-md text-label-md text-secondary font-bold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">warehouse</span>Echo-1 Depot
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Elev: 1,420m | Sec-Zone A</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest">
+<span class="font-label-sm text-label-sm text-outline block uppercase">Destination Vector</span>
+<span class="font-label-md text-label-md text-tertiary font-bold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">flag</span>FOS Delta-4
+              </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Elev: 4,110m | Frontline</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Module B: Logistics & Stock Profile -->
+<div class="bg-surface-container-low shadow-sm flex flex-col">
+<div class="flex items-center justify-between px-space-md py-2 bg-surface-container-lowest">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary font-semibold">SEC.B</span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">Logistics & Critical Stock</span>
+</div>
+<span class="px-space-xs py-0.2 bg-primary/10 text-primary font-label-sm text-label-sm">PRIORITY: HIGH</span>
+</div>
+<div class="p-space-md flex flex-col gap-space-sm">
+<div class="flex justify-between items-center py-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Payload Profile:</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cryomedicine & Field Kits (14.5 MT)</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-lowest/50 px-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Delivery Strict Window:</span>
+<span class="font-data-mono-md text-body-sm text-on-surface">T + 72.0 HOURS</span>
+</div>
+<div class="flex justify-between items-center py-1 px-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Current Forward Inventory:</span>
+<span class="font-data-mono-md text-body-sm text-secondary">420 UNITS</span>
+</div>
+<div class="flex justify-between items-center py-1 bg-surface-container-lowest/50 px-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Target Consumption Rate:</span>
+<span class="font-data-mono-md text-body-sm text-on-surface">48 UNITS / DAY</span>
+</div>
+<!-- Stockout Gauge Visual -->
+<div class="mt-space-xs p-space-sm bg-surface-container-lowest flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant uppercase">Depletion To Critical Floor:</span>
+<span class="text-error font-semibold">CRITICAL AT T+52h (90 UNITS)</span>
+</div>
+<div class="w-full h-2 bg-surface-container-highest overflow-hidden flex">
+<div class="bg-primary h-full" style="width: 48%"></div>
+<div class="bg-tertiary h-full" style="width: 30%"></div>
+<div class="bg-error h-full" style="width: 22%"></div>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm text-outline">
+<span>Reserve (200u)</span>
+<span>Nominal (130u)</span>
+<span>Floor (90u)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Module C: Fleet Dynamics & Environmental Conditions -->
+<div class="bg-surface-container-low shadow-sm flex flex-col">
+<div class="flex items-center justify-between px-space-md py-2 bg-surface-container-lowest">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary font-semibold">SEC.C & D</span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">Fleet Dynamics & Environment</span>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>SEVERE ADVISORY
+          </span>
+</div>
+<div class="p-space-md grid grid-cols-2 gap-space-sm font-label-sm text-label-sm">
+<div class="p-space-sm bg-surface-container-lowest flex flex-col gap-0.5">
+<span class="text-outline uppercase">Carrier Transport</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Heavy Unit HHC-4</span>
+<span class="text-on-surface-variant font-data-mono-md text-body-sm">LOAD: 80% CAPACITY</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest flex flex-col gap-0.5">
+<span class="text-outline uppercase">Mandatory Rest Cycle</span>
+<span class="font-data-mono-md text-label-md text-on-surface font-semibold">6.0 HOURS</span>
+<span class="text-on-surface-variant">Every 18h operations</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest flex flex-col gap-0.5">
+<span class="text-outline uppercase">Atmosphere / Weather</span>
+<span class="font-label-md text-label-md text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">ac_unit</span>BLIZZARD ALPHA
+            </span>
+<span class="text-on-surface-variant font-data-mono-md text-body-sm">-18°C AMBIENT</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest flex flex-col gap-0.5">
+<span class="text-outline uppercase">Elevation & Topography</span>
+<span class="font-data-mono-md text-label-md text-on-surface font-semibold">3,800m MEAN</span>
+<span class="text-on-surface-variant">Alpine Class IV Glaciated</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CENTER COLUMN: Topological Vector Map & Temporal Scrubber (5 cols on XL) -->
+<div class="xl:col-span-5 flex flex-col gap-space-md">
+<!-- Tactical Map Viewport Card -->
+<div class="bg-surface-container-low shadow-sm flex flex-col h-full">
+<!-- Card Header with Coordinates -->
+<div class="flex items-center justify-between px-space-md py-2 bg-surface-container-lowest">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-primary font-bold">MAP-01</span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">Topological Vector Network</span>
+</div>
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm text-outline">
+<span class="font-data-mono-md text-body-sm text-secondary">34.8291° N, 76.1042° E</span>
+<span class="material-symbols-outlined text-[16px]">fullscreen</span>
+</div>
+</div>
+<!-- Inline Visual Topological Map Canvas -->
+<div class="relative w-full h-[440px] bg-surface-container-lowest overflow-hidden flex items-center justify-center p-space-sm">
+<!-- Background Grid Overlay -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="40" id="tactical-grid" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#869585" stroke-width="0.5"></path>
+<circle cx="40" cy="40" fill="#869585" r="1"></circle>
+</pattern>
+</defs>
+<rect fill="url(#tactical-grid)" height="100%" width="100%"></rect>
+</svg>
+<!-- Topographic Contour Lines Synthetic Simulation (Underlay) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-30" xmlns="http://www.w3.org/2000/svg">
+<path d="M 20,400 Q 120,300 240,360 T 480,260 T 700,290" fill="none" stroke="#31353f" stroke-dasharray="4,4" stroke-width="1.5"></path>
+<path d="M 10,340 Q 140,240 290,290 T 520,210 T 750,230" fill="none" stroke="#31353f" stroke-width="1.5"></path>
+<path d="M 40,260 Q 180,180 340,220 T 560,150 T 800,180" fill="none" stroke="#31353f" stroke-width="1"></path>
+<path d="M 80,190 Q 220,110 390,160 T 600,100 T 850,110" fill="none" stroke="#31353f" stroke-dasharray="2,2" stroke-width="0.75"></path>
+</svg>
+<!-- Tactical Network Vectors SVG -->
+<svg class="relative w-full h-full" viewbox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+<!-- Defs for markers and filters -->
+<defs>
+<radialgradient cx="50%" cy="50%" id="disruption-glow" r="50%">
+<stop offset="0%" stop-color="#ffb4ab" stop-opacity="0.6"></stop>
+<stop offset="60%" stop-color="#93000a" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#93000a" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+<!-- Disrupted Primary Path (Echo-1 -> K-Bridge -> Pass Bravo) -->
+<!-- Dotted/Severed Baseline Route -->
+<path d="M 70,330 L 190,240 L 300,210" fill="none" opacity="0.4" stroke="#869585" stroke-dasharray="6,4" stroke-width="3"></path>
+<path d="M 300,210 L 410,130 L 530,70" fill="none" opacity="0.6" stroke="#ffb4ab" stroke-dasharray="4,4" stroke-width="2.5"></path>
+<!-- Active Detour Route Beta (Emerald Green Vector via Ridge Corridor) -->
+<path d="M 70,330 L 190,240 L 210,340 L 370,290 L 470,180 L 530,70" fill="none" id="route-beta" stroke="#4be277" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Detour Flow Pulses -->
+<circle fill="#6bff8f" r="4">
+<animatemotion dur="6s" path="M 70,330 L 190,240 L 210,340 L 370,290 L 470,180 L 530,70" repeatcount="indefinite"></animatemotion>
+</circle>
+<circle fill="#ffffff" opacity="0.8" r="3">
+<animatemotion begin="2s" dur="6s" path="M 70,330 L 190,240 L 210,340 L 370,290 L 470,180 L 530,70" repeatcount="indefinite"></animatemotion>
+</circle>
+<!-- K-Bridge Simulated Obstacle / Disruption Zone -->
+<circle class="animate-pulse" cx="300" cy="210" fill="url(#disruption-glow)" r="38"></circle>
+<circle cx="300" cy="210" fill="#93000a" r="16" stroke="#ffb4ab" stroke-width="2"></circle>
+<line stroke="#ffffff" stroke-linecap="round" stroke-width="2.5" x1="290" x2="310" y1="200" y2="220"></line>
+<line stroke="#ffffff" stroke-linecap="round" stroke-width="2.5" x1="310" x2="290" y1="200" y2="220"></line>
+<text fill="#ffb4ab" font-family="JetBrains Mono" font-size="10" font-weight="700" text-anchor="middle" x="300" y="240">BLOCKED: K-BRIDGE</text>
+<!-- Nodes & Waypoint Markers -->
+<!-- Node 01: Echo-1 Depot -->
+<g transform="translate(70, 330)">
+<rect fill="#181b25" height="28" stroke="#7bd0ff" stroke-width="2" width="28" x="-14" y="-14"></rect>
+<circle cx="0" cy="0" fill="#7bd0ff" r="5"></circle>
+<text fill="#dfe2ef" font-family="JetBrains Mono" font-size="11" font-weight="600" text-anchor="middle" x="0" y="24">ECHO-1 DEPOT</text>
+<text fill="#869585" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="0" y="34">BASE ORIGIN</text>
+</g>
+<!-- Node 02: Junction Beta -->
+<g transform="translate(190, 240)">
+<circle cx="0" cy="0" fill="#181b25" r="7" stroke="#4be277" stroke-width="2"></circle>
+<circle cx="0" cy="0" fill="#4be277" r="3"></circle>
+<text fill="#dfe2ef" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="-12" y="-12">JUNCTION BETA</text>
+</g>
+<!-- Node 03: Detour Pass Waypoint (Valley South) -->
+<g transform="translate(370, 290)">
+<circle cx="0" cy="0" fill="#181b25" r="6" stroke="#4be277" stroke-width="1.5"></circle>
+<text fill="#4be277" font-family="JetBrains Mono" font-size="9" x="10" y="16">DETOUR WP-14</text>
+</g>
+<!-- Node 04: Pass Bravo -->
+<g transform="translate(410, 130)">
+<polygon fill="#181b25" points="0,-8 7,6 -7,6" stroke="#ffba61" stroke-width="2"></polygon>
+<text fill="#ffba61" font-family="JetBrains Mono" font-size="10" font-weight="600" x="14" y="2">PASS BRAVO (CONTESTED)</text>
+<text fill="#869585" font-family="JetBrains Mono" font-size="8" x="14" y="12">ELEV: 3,920m</text>
+</g>
+<!-- Node 05: FOS Delta-4 -->
+<g transform="translate(530, 70)">
+<polygon fill="#181b25" points="0,-12 12,0 0,12 -12,0" stroke="#ffba61" stroke-width="2"></polygon>
+<circle cx="0" cy="0" fill="#ffba61" r="4"></circle>
+<text fill="#ffba61" font-family="JetBrains Mono" font-size="11" font-weight="700" text-anchor="end" x="-14" y="-14">FOS DELTA-4</text>
+<text fill="#869585" font-family="JetBrains Mono" font-size="8" text-anchor="end" x="-14" y="-4">DELIVERY TARGET</text>
+</g>
+<!-- Real-time convoy simulated marker -->
+<g id="convoy-tracker" transform="translate(250, 325)">
+<rect fill="#4ae176" height="16" stroke="#003915" stroke-width="2" width="16" x="-8" y="-8"></rect>
+<text fill="#4ae176" font-family="JetBrains Mono" font-size="9" font-weight="700" text-anchor="middle" x="0" y="-12">CONVOY-01 [ACTIVE]</text>
+</g>
+</svg>
+<!-- Floating Map Mode & Legend Chips -->
+<div class="absolute top-space-md left-space-md flex flex-col gap-1 pointer-events-none">
+<span class="px-space-xs py-0.5 bg-surface-container-lowest/90 border border-outline-variant/40 text-on-surface font-label-sm text-label-sm">
+<span class="text-primary font-bold">ROUTE BETA:</span> +18.4 KM DETOUR
+            </span>
+<span class="px-space-xs py-0.5 bg-error-container/80 text-on-error-container font-label-sm text-label-sm">
+              OBSTACLE: BRIDGE WASHOUT (K-BRIDGE)
+            </span>
+</div>
+<div class="absolute bottom-space-md right-space-md bg-surface-container-lowest/90 border border-outline-variant/30 p-space-xs font-label-sm text-label-sm flex flex-col gap-1">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-0.5 bg-primary"></span>
+<span class="text-on-surface">Active Detour Vector</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-0.5 bg-error border-t border-dashed"></span>
+<span class="text-on-surface-variant">Primary Impassable</span>
+</div>
+</div>
+</div>
+<!-- Interactive Temporal Scrubber Dock -->
+<div class="p-space-md bg-surface-container flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">history_toggle_off</span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">Temporal Timeline Scrubber</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="p-1 bg-surface-container-highest hover:bg-surface-variant text-on-surface" id="btn-scrub-play" type="button">
+<span class="material-symbols-outlined text-[16px]">play_arrow</span>
+</button>
+<span class="font-data-mono-lg text-data-mono-md text-primary font-bold" id="scrubber-label">T+28.4h</span>
+<span class="font-label-sm text-label-sm text-outline">/ T+72.0h</span>
+</div>
+</div>
+<input class="w-full h-2 bg-surface-container-lowest appearance-none cursor-pointer accent-secondary" id="temporal-scrubber" max="72" min="0" step="0.5" type="range" value="28.4"/>
+<div class="flex justify-between font-label-sm text-label-sm text-outline">
+<span>T+00h (Depot Departure)</span>
+<span class="text-tertiary">T+36h (Pass Entry)</span>
+<span class="text-on-surface">T+72h (Target Delivery)</span>
+</div>
+</div>
+<!-- Speed Vector & Route Comparative Analytics Table -->
+<div class="p-space-md bg-surface-container-low flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Route Comparison Telemetry</span>
+<div class="grid grid-cols-3 gap-space-xs text-center font-label-sm text-label-sm">
+<div class="p-2 bg-surface-container-lowest">
+<span class="text-outline block uppercase">Est. Transit Time</span>
+<span class="font-data-mono-md text-body-sm text-tertiary font-bold">59.8 HOURS</span>
+<span class="text-error text-[10px] block mt-0.5">+14.2h baseline delta</span>
+</div>
+<div class="p-2 bg-surface-container-lowest">
+<span class="text-outline block uppercase">Mean Velocity</span>
+<span class="font-data-mono-md text-body-sm text-on-surface font-bold">22.4 KM/H</span>
+<span class="text-outline-variant text-[10px] block mt-0.5">Alpine derated</span>
+</div>
+<div class="p-2 bg-surface-container-lowest">
+<span class="text-outline block uppercase">Fuel Delta</span>
+<span class="font-data-mono-md text-body-sm text-secondary font-bold">+280 LTR</span>
+<span class="text-secondary text-[10px] block mt-0.5">Reserve OK (84%)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: What-If Injections & Stochastic Engine Dock (3.5 cols on XL) -->
+<div class="xl:col-span-3 flex flex-col gap-space-md">
+<!-- What-If Event Injection Panel -->
+<div class="bg-surface-container-low shadow-sm flex flex-col">
+<div class="flex items-center justify-between px-space-md py-2 bg-surface-container-lowest">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-tertiary">warning</span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">What-If Injections</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">3 ACTIVE</span>
+</div>
+<div class="p-space-md flex flex-col gap-space-sm">
+<button class="w-full py-2 px-space-md bg-surface-container-highest hover:bg-surface-bright text-on-surface font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-space-xs transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">add_circle</span>
+<span>ADD WHAT-IF EVENT</span>
+</button>
+<!-- Injected Event 01: Pass Bravo -->
+<div class="p-space-sm bg-surface-container-lowest flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">EVENT #01: Pass Bravo Chokepoint</span>
+</div>
+<span class="px-space-xs py-0.2 bg-error/10 text-error font-label-sm text-label-sm uppercase">STOCHASTIC</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Simulated rockslide & road deterioration across narrow ascent gorge.</p>
+<div class="flex items-center justify-between pt-1 border-t border-surface-container-highest font-label-sm text-label-sm">
+<span class="text-outline uppercase">IMPACT:</span>
+<span class="font-data-mono-md text-body-sm text-error font-bold">-65% CONVOY SPEED</span>
+</div>
+<div class="flex items-center justify-between text-outline text-[10px]">
+<span>TRIGGER: T+32.0h</span>
+<span class="text-primary font-semibold">STATE: ACTIVE ENGAGED</span>
+</div>
+</div>
+<!-- Injected Event 02: Mesh Signal Disruption -->
+<div class="p-space-sm bg-surface-container-lowest flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">EVENT #02: Mesh Disruption (Sec 7)</span>
+</div>
+<span class="px-space-xs py-0.2 bg-tertiary/10 text-tertiary font-label-sm text-label-sm uppercase">C2 LINK</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Severe ionospheric jamming and valley RF shielding cutoff.</p>
+<div class="flex items-center justify-between pt-1 border-t border-surface-container-highest font-label-sm text-label-sm">
+<span class="text-outline uppercase">FALLBACK:</span>
+<span class="font-label-sm text-label-sm text-tertiary font-semibold">OFFLINE ASYNC STORE-FORWARD</span>
+</div>
+<div class="flex items-center justify-between text-outline text-[10px]">
+<span>TRIGGER: T+18.5h to T+44.0h</span>
+<span class="text-primary font-semibold">STATE: ACTIVE ENGAGED</span>
+</div>
+</div>
+<!-- Injected Event 03: Severe Frost Battery Derate -->
+<div class="p-space-sm bg-surface-container-lowest flex flex-col gap-1.5 shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">EVENT #03: Subzero Battery Derate</span>
+</div>
+<span class="px-space-xs py-0.2 bg-secondary/10 text-secondary font-label-sm text-label-sm uppercase">THERMAL</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">-22°C overnight thermal drain affecting carrier auxiliary units.</p>
+<div class="flex items-center justify-between pt-1 border-t border-surface-container-highest font-label-sm text-label-sm">
+<span class="text-outline uppercase">IMPACT:</span>
+<span class="font-data-mono-md text-body-sm text-secondary font-bold">+22% AUX DRAW / HR</span>
+</div>
+<div class="flex items-center justify-between text-outline text-[10px]">
+<span>TRIGGER: CONTINUOUS < -15°C</span>
+<span class="text-primary font-semibold">STATE: ACTIVE ENGAGED</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Real-Time Delta Impact Synthesis Card -->
+<div class="bg-surface-container-low shadow-sm flex flex-col flex-1">
+<div class="flex items-center justify-between px-space-md py-2 bg-surface-container-lowest">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">analytics</span>
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider">Delta Impact Summary</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">N=1,000 RUNS</span>
+</div>
+<div class="p-space-md flex flex-col justify-between gap-space-md flex-1">
+<div class="space-y-space-sm">
+<!-- Metric 1: Stockout Probability -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant uppercase">Stockout Probability (FOS Delta-4):</span>
+<span class="font-data-mono-md text-body-sm text-error font-bold">14.8%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest">
+<div class="bg-error h-full" style="width: 14.8%"></div>
+</div>
+<span class="text-outline text-[10px]">+11.2% over deterministic baseline</span>
+</div>
+<!-- Metric 2: Mean Arrival Delay -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant uppercase">Mean Projected Delay:</span>
+<span class="font-data-mono-md text-body-sm text-tertiary font-bold">+11.4 HOURS</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest">
+<div class="bg-tertiary h-full" style="width: 42%"></div>
+</div>
+<span class="text-outline text-[10px]">Confidence Interval 95%: [8.2h, 15.6h]</span>
+</div>
+<!-- Metric 3: Mission Survivability Index -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-label-sm">
+<span class="text-on-surface-variant uppercase">Resilience Index (MSI):</span>
+<span class="font-data-mono-md text-body-sm text-primary font-bold">88.2 / 100</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest">
+<div class="bg-primary h-full" style="width: 88.2%"></div>
+</div>
+<span class="text-outline text-[10px]">Detour Beta compensates for K-Bridge severed link</span>
+</div>
+</div>
+<!-- Bottom Telemetry Stamp -->
+<div class="p-space-sm bg-surface-container-lowest flex items-center justify-between font-label-sm text-label-sm text-outline">
+<span>SEED: #48192-SYN</span>
+<span class="text-primary flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+              MONTE-CARLO STABLE
+            </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Interactive Temporal Scrubber sync with display
+  const scrubber = document.getElementById('temporal-scrubber');
+  const scrubberLabel = document.getElementById('scrubber-label');
+  const horizonSlider = document.getElementById('horizon-range');
+  const horizonLabel = document.getElementById('horizon-val');
+  const btnScrubPlay = document.getElementById('btn-scrub-play');
+  const btnRunSim = document.getElementById('btn-run-sim');
+  const convoyTracker = document.getElementById('convoy-tracker');
+
+  let isPlaying = false;
+  let playInterval = null;
+
+  if (scrubber && scrubberLabel) {
+    scrubber.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value).toFixed(1);
+      scrubberLabel.textContent = `T+${val}h`;
+      updateConvoyMarker(parseFloat(e.target.value));
+    });
+  }
+
+  function updateConvoyMarker(hour) {
+    if (!convoyTracker) return;
+    // Map hour 0 to 72 roughly across SVG coordinates
+    const progress = hour / 72.0;
+    const startX = 70;
+    const startY = 330;
+    const endX = 530;
+    const endY = 70;
+    const currentX = startX + (endX - startX) * progress;
+    const currentY = startY + (endY - startY) * progress;
+    convoyTracker.setAttribute('transform', `translate(${currentX.toFixed(1)}, ${currentY.toFixed(1)})`);
+  }
+
+  if (btnScrubPlay && scrubber) {
+    btnScrubPlay.addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      const icon = btnScrubPlay.querySelector('.material-symbols-outlined');
+      if (isPlaying) {
+        if (icon) icon.textContent = 'pause';
+        playInterval = setInterval(() => {
+          let curr = parseFloat(scrubber.value);
+          if (curr >= 72) curr = 0;
+          curr += 0.8;
+          scrubber.value = curr.toFixed(1);
+          scrubberLabel.textContent = `T+${curr.toFixed(1)}h`;
+          updateConvoyMarker(curr);
+        }, 120);
+      } else {
+        if (icon) icon.textContent = 'play_arrow';
+        clearInterval(playInterval);
+      }
+    });
+  }
+
+  if (horizonSlider && horizonLabel) {
+    horizonSlider.addEventListener('input', (e) => {
+      horizonLabel.textContent = `${e.target.value} HOURS`;
+    });
+  }
+
+  if (btnRunSim) {
+    btnRunSim.addEventListener('click', () => {
+      const origText = btnRunSim.innerHTML;
+      btnRunSim.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span><span>COMPUTING 1,000 ITERATIONS...</span>`;
+      btnRunSim.disabled = true;
+      setTimeout(() => {
+        btnRunSim.innerHTML = origText;
+        btnRunSim.disabled = false;
+      }, 1400);
+    });
+  }
+</script></main></div></body></html>

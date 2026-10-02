@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+cleanup() {
+  kill "$BACKEND_PID" "$FRONTEND_PID" 2>/dev/null || true
+}
+trap cleanup INT TERM EXIT
+
+(cd "$ROOT/backend" && python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000) &
+BACKEND_PID=$!
+
+(cd "$ROOT/frontend" && npm run dev) &
+FRONTEND_PID=$!
+
+wait "$BACKEND_PID" "$FRONTEND_PID"

@@ -1,0 +1,1 @@
+"""Pure shared-scenario orchestration."""

@@ -1,0 +1,40 @@
+{
+  "id": "maya-demo",
+  "name": "Fictional Cedar Depot to Lake Community",
+  "version": 1,
+  "seed": 42,
+  "start_time": "2026-10-02T00:00:00Z",
+  "horizon_hours": 120,
+  "step_hours": 6,
+  "origin": "cedar",
+  "destination": "lake",
+  "nodes": [{"id": "cedar", "name": "Cedar Depot"}, {"id": "lake", "name": "Lake Community"}],
+  "routes": [
+    {"id": "route-a", "origin": "cedar", "destination": "lake", "capacity": 100,
+      "environment_stress": 0.1, "altitude_stress": 0.1,
+      "segments": [{"id": "a1", "distance_km": 180, "nominal_hours": 24,
+        "time_variation_fraction": 0.1, "disruption_probability": 0.1, "disruption_delay_hours": 6}]},
+    {"id": "route-b", "origin": "cedar", "destination": "lake", "capacity": 100,
+      "environment_stress": 0.2, "altitude_stress": 0.1,
+      "segments": [{"id": "b1", "distance_km": 260, "nominal_hours": 60,
+        "time_variation_fraction": 0.1, "disruption_probability": 0.05, "disruption_delay_hours": 8}]},
+    {"id": "route-c", "origin": "cedar", "destination": "lake", "capacity": 100,
+      "environment_stress": 0.3, "altitude_stress": 0.2,
+      "segments": [{"id": "c1", "distance_km": 310, "nominal_hours": 80,
+        "time_variation_fraction": 0.1, "disruption_probability": 0.05, "disruption_delay_hours": 8}]}
+  ],
+  "resources": [{"id": "transport-1", "resource_type": "synthetic_transport",
+    "capacity": 100, "load": 60, "rest_hours": 8, "operating_hours": 4}],
+  "stock_nodes": [{"node_id": "lake", "stock": 50, "reserved_stock": 0,
+    "daily_consumption": 24, "demand_variation_fraction": 0.1,
+    "safety_threshold": 20, "critical_threshold": 12,
+    "scheduled_inbound": [{"id": "shipment-1", "quantity": 60, "departure_hour": 0}]}],
+  "events": [],
+  "connectivity_online": true,
+  "assumptions": [
+    "Fictional locations, generic supply units and synthetic parameters only.",
+    "Candidate paths are supplied inputs, not live GIS or operational routes.",
+    "All inbound shipments use the candidate route and assigned transport group.",
+    "Supply quantity and transport load use the same abstract demo units."
+  ]
+}
